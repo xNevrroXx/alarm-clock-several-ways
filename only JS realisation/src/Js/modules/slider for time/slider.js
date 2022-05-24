@@ -1,12 +1,14 @@
+import getZero from "../tech functions/getZero";
+
 function createSlider(containerElement, maxValue) {
     setValuesAtPage();
 
     function setValuesAtPage() {
         for (let i = Math.floor(-maxValue*1); i <= Math.floor(maxValue * 1); i++) {
             const value = i < 0 ? ((i * -1) % maxValue) : (i % maxValue);
-            console.log(i % maxValue)
+            // console.log(i % maxValue)
             containerElement.insertAdjacentHTML("beforeend", 
-                `<span data-index=${i} class=${i == 0 ? "active" : ""}>${value}</span>`
+                `<span data-index=${i} class=${i == 0 ? "active" : ""}>${getZero(value)}</span>`
             );
         }
     }

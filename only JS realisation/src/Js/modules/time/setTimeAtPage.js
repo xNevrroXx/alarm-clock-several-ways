@@ -3,9 +3,9 @@
 import getZero from "../tech functions/getZero";
 
 function setTimeAtPage(containerElement, timeMs) {
-    const hoursElement = containerElement.querySelector(".hours");
-    const minutesElement = containerElement.querySelector(".minutes");
-    const secondsElement = containerElement.querySelector(".seconds");
+    const hoursElement = containerElement.querySelector(".hours > span");
+    const minutesElement = containerElement.querySelector(".minutes > span");
+    const secondsElement = containerElement.querySelector(".seconds > span");
     
     const hours = getZero(Math.floor(timeMs / (1000 * 60 * 60) % 24));
     const minutes = getZero(Math.floor(timeMs / (1000 * 60) % 60));
