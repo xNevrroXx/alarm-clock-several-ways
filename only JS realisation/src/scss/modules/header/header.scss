@@ -1,0 +1,21 @@
+header {
+    display: block;
+    height: 50px;
+    // background: linear-gradient(45deg, rgb(170, 99, 99), rgb(175, 61, 61));
+    & > div {
+        width: 60%;
+        margin: 0 auto;
+    }
+    .menu {
+        display: flex;
+        list-style: none;
+        justify-content: space-between;
+        &__item {
+            font-size: 30px;
+            transition: .2s all;
+            &:hover {
+                transform: scale(1.2);
+            }
+        }
+    }
+}

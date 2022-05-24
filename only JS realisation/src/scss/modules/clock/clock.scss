@@ -1,0 +1,16 @@
+#clock {
+	color: black;
+	font-size: 80px;
+
+	width: 500px;
+	display: flex;
+	justify-content: center;
+	margin: 0 auto;
+    & > div {
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+        width: 90px;
+        height: 150px;
+    }
+}

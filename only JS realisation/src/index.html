@@ -6,9 +6,64 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Alarm clock</title>
 
-    <script defer src="Js/main.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" href="css/index.css">
+    
+    <script defer src="js/bundle.js"></script>
 </head>
 <body>
-    <h1>hello</h1>
+    <header>
+        <div>
+            <ul class="menu">
+                <li>
+                    <div class="menu__item menu__item-active">Time</div>
+                </li>
+                <li>
+                    <div class="menu__item">Alarm clock</div>
+                </li>
+                <li>
+                    <div class="menu__item">Stopwatch</div>
+                </li>
+                <li>
+                    <div class="menu__item">Timer</div>
+                </li>
+            </ul>
+        </div>
+    </header>
+
+    <!-- <div class="curveWrap">
+        <svg width="100%" height="100%" viewBox="0 0 1200 100" xmlns="http://www.w3.org/2000/svg">
+            <g class="curve" fill="none">
+                <path d="M 0, 60 S 300, -60, 600, 60, 800, -120, 1200 60" />
+                <path d="M 0, 60 S 200, -60, 400, 60, 900, -120, 1200 60" />
+                <path d="M 0, 60 S 200, -70, 400, 70, 800, -120, 1200 60" />
+                <path d="M 0, 60 S 200, -60, 400, 80, 600, -120, 1200 60" />
+            </g>
+        </svg>
+    </div>
+
+    
+    <div class="curveWrap" style="height: 500px">
+        <svg width="100%" height="100%" viewBox="0 0 1200 150" xmlns="http://www.w3.org/2000/svg">
+            <g class="curve2" fill="none" style="text-align: middle;">
+                <path d="
+                    M 100, 100
+                    m -75, 0
+                    a 75,75 0 1,0 150,0
+                    a 75,75 0 1,0 -150,0
+
+                    M 500, 100 C 600 100, 700 150, 800 0
+                " stroke="red"/>
+            </g>
+        </svg>
+    </div> -->
+
+    <!-- <input name="clock" type="radio">Время</input>
+    <input name="clock" type="radio">Будильник</input>
+    <input name="clock" type="radio">Секундомер</input>
+    <input name="clock" type="radio">Таймер</input> -->
+    <div class="" id="clock">
+        <div class="hours"><span>00</span></div>:<div class="minutes"><span>00</span></div>:<div class="seconds"><span>00</span></div>
+    </div>
 </body>
 </html>
