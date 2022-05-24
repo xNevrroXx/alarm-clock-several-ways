@@ -1,1 +1,0 @@
-{"version":3,"file":"bundle.js","mappings":";;;;;AAAAA,OAAO,CAACC,GAAR,CAAY,IAAZ,E","sources":["webpack://alarm-clock-js/./src/js/main.js"],"sourcesContent":["console.log(\"hi\")"],"names":["console","log"],"sourceRoot":""}
