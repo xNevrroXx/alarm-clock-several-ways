@@ -7,12 +7,21 @@
 	justify-content: center;
 	margin: 0 auto;
     & > div {
-        overflow: hidden scroll;
         width: 90px;
         height: 120px;
     }
     .clock__wrapper-slider {
+        overflow: hidden auto;
+        scroll-snap-type: y mandatory;
         display: flex;
         flex-direction: column;
+        height: 300%;
+        &::-webkit-scrollbar {
+            display: none;
+        }
+    }
+    span {
+        transform: translateY(120px);
+        scroll-snap-align: center;
     }
 }

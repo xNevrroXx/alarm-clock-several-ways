@@ -2,12 +2,13 @@
 import clock from "./modules/clock/clock";
 import setTimeAtPage from "./modules/time/setTimeAtPage";
 import createTimer from "./modules/timer/timer";
+import {removeUnnecessary} from "./modules/tech functions/removeUnnecessary";
 
 window.addEventListener("DOMContentLoaded", function () {
     const tabsElement = document.querySelector("header");
     let activeTab = "time";
-    let clockInterval = null;
-    const clockElement = document.querySelector("#clock");  
+    let intervalID = null;
+    const clockElement = document.querySelector("#clock");
 
     if (!clockElement) {
         throw new Error("There is no clockElement at page.");
@@ -23,26 +24,29 @@ window.addEventListener("DOMContentLoaded", function () {
             
             switch(activeTab) {
                 case "time": {
-                    resetClock();
-                    clockInterval = clock(clockElement);
-                    
+                    resetClockInterval();
+                    removeUnnecessary(clockElement);
+                    intervalID = clock(clockElement);
                     break;
                 }
 
                 case "alarm clock": {
-                    resetClock();
+                    resetClockInterval();
+                    removeUnnecessary(clockElement);
 
                     break;
                 }
 
                 case "stopwatch": {
-                    resetClock();
+                    resetClockInterval();
+                    removeUnnecessary(clockElement);
 
                     break;
                 }
 
                 case "timer": {
-                    resetClock();
+                    resetClockInterval();
+                    removeUnnecessary(clockElement);
                     createTimer(clockElement);
 
                     break;
@@ -50,20 +54,13 @@ window.addEventListener("DOMContentLoaded", function () {
             }
         }
     })
+    
+    intervalID = clock(clockElement);
 
-
-    clockInterval = clock(clockElement);
-
-
-    // functions
-    function resetClock() {
-        if(clockInterval) {
-            clearInterval(clockInterval);
-            clockInterval = null;
+    function resetClockInterval() {
+        if(intervalID) {
+            clearInterval(intervalID);
+            intervalID = null;
         }
-
-        clockElement.querySelectorAll("div").forEach(elem => {
-            elem.innerHTML = "";
-        })
     }
 });

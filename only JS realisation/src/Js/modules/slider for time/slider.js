@@ -1,10 +1,10 @@
 import getCountPixels from "../tech functions/getCountPixels";
 import getZero from "../tech functions/getZero";
 
-function createSlider(containerElement, maxValue) {
+function createSlider(containerElement, maxValue, defaultActiveNumber = 0) {
     containerElement.innerHTML = "<div class='clock__wrapper-slider'></div>";
     const wrapperSlides = containerElement.querySelector(".clock__wrapper-slider");
-    let numberActiveSlide = null;
+    let activeNumber = defaultActiveNumber;
 
     for (var i = Math.floor(-maxValue*1); i <= Math.floor(maxValue * 1); i++) {
         const value = i < 0 ? ((i * -1) % maxValue) : (i % maxValue);
@@ -25,6 +25,7 @@ function createSlider(containerElement, maxValue) {
     function changeSlide(event) {
         if(event && event.target && event.target.tagName == "SPAN") {
             const target = event.target;
+            activeNumber = target.textContent;
             wrapperSlides.querySelectorAll("span").forEach(element => {
                 element.classList.remove("active");
             });
