@@ -8,8 +8,16 @@ function createButton(internalText, classText = "start-button") {
 
 function createSpans(clockElement) {
     clockElement.querySelectorAll("div").forEach(element => {
-        element.innerHTML = "<span></span>";
+        element.innerHTML = "<span>00</span>";
     });
 }
 
-export {createButton, createSpans};
+function createMsElement(containerElement) {
+    const msElement = document.createElement("div");
+    msElement.className = "milliseconds";
+
+    containerElement.insertAdjacentHTML("beforeend", ":");
+    containerElement.appendChild(msElement);
+}
+
+export {createButton, createSpans, createMsElement};

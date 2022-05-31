@@ -61,9 +61,6 @@ function createTimer(containerElement) {
                 minutes = minutesWrap.querySelector(".clock__wrapper-slider > span.active"),
                 seconds = secondsWrap.querySelector(".clock__wrapper-slider > span.active");
 
-            console.log(hoursWrap)
-            console.log(minutes);
-            console.log(seconds);
             return ((+hours.textContent * 1000 * 60 * 60) + (+minutes.textContent * 1000 * 60) + (+seconds.textContent * 1000));
         }
     }

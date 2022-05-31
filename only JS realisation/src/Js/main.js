@@ -2,6 +2,7 @@
 import clock from "./modules/clock/clock";
 import setTimeAtPage from "./modules/time/setTimeAtPage";
 import createTimer from "./modules/timer/timer";
+import createStopwatch from "./modules/stopwatch/stopwatch";
 import {removeUnnecessary} from "./modules/tech functions/removeUnnecessary";
 
 window.addEventListener("DOMContentLoaded", function () {
@@ -40,6 +41,7 @@ window.addEventListener("DOMContentLoaded", function () {
                 case "stopwatch": {
                     resetClockInterval();
                     removeUnnecessary(clockElement);
+                    createStopwatch(clockElement);
 
                     break;
                 }
