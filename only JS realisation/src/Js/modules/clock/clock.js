@@ -1,7 +1,8 @@
-import { createSpans } from "../tech functions/createsElements";
+import { createSpans } from "../tech functions/createElements";
 import setTimeAtPage from "../time/setTimeAtPage";
+import changeTabs from "../tech functions/changeTabs";
 
-function clock(clockElement) {
+function createClock(clockElement) {
     let date = new Date().getTime() + (1000 * 60 * 60 * 3);
     let intervalID = null;
     
@@ -14,7 +15,7 @@ function clock(clockElement) {
         setTimeAtPage(clockElement, date);
     }, Math.floor(date / 1000 % 60))
     
-    return intervalID;
+    changeTabs(intervalID, clockElement, "time");
 }
 
-export default clock;
+export default createClock;

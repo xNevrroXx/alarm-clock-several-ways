@@ -1,8 +1,9 @@
 import {createHoursSlider, createMinutesSlider, createSecondsSlider} from "../slider for time/slider";
-import {createButton} from "../tech functions/createsElements";
-import {removeUnnecessary} from "../tech functions/removeUnnecessary";
-import { createSpans } from "../tech functions/createsElements";
+import {createButton} from "../tech functions/createElements";
+import {clearClockElement} from "../tech functions/clearClockElement";
+import { createSpans } from "../tech functions/createElements";
 import setTimeAtPage from "../time/setTimeAtPage";
+import changeTabs from "../tech functions/changeTabs";
 
 function createTimer(containerElement) {
     const hoursWrap = containerElement.querySelector(".hours");
@@ -19,11 +20,13 @@ function createTimer(containerElement) {
 
     startBtn.addEventListener("click", startTimer);
 
+    changeTabs(intervalID, containerElement, "timer");
+    
     function startTimer() {
         let remainedTime = getStartTime();
 
         startBtn.removeEventListener("click", startTimer)
-        removeUnnecessary(containerElement);
+        clearClockElement(containerElement);
         createSpans(containerElement);
 
         const stopBtn = createButton("stop timer");
@@ -33,6 +36,7 @@ function createTimer(containerElement) {
         intervalID = setInterval(() => {
             if(remainedTime == 0) {
                 autoStopTimer();
+                clearInterval(intervalID);
                 return;
             }
 
@@ -46,7 +50,7 @@ function createTimer(containerElement) {
         // functions
         function techStopTimer() {
             stopBtn.removeEventListener("click", techStopTimer);
-            removeUnnecessary(containerElement);
+            clearClockElement(containerElement);
 
             clearInterval(intervalID);
             createTimer(containerElement);
