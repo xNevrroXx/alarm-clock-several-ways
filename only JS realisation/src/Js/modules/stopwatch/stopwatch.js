@@ -1,7 +1,7 @@
-import { createButton } from "../tech functions/createsElements";
-import { removeUnnecessary } from "../tech functions/removeUnnecessary";
-import { createSpans, createMsElement } from "../tech functions/createsElements";
+import { createButton } from "../tech functions/createElements";
+import { createSpans, createMsElement } from "../tech functions/createElements";
 import setTimeAtPage from "../time/setTimeAtPage";
+import changeTabs from "../tech functions/changeTabs";
 
 function createStopwatch(containerElement) {
     createMsElement(containerElement);
@@ -18,8 +18,10 @@ function createStopwatch(containerElement) {
     createSpans(containerElement);
     containerElement.appendChild(startBtn);
 
-    setTimeAtPage(containerElement, time)
+    setTimeAtPage(containerElement, time);
     startBtn.addEventListener("click", startStopwatch);
+
+    changeTabs(intervalID, containerElement, "stopwatch");
 
     function startStopwatch() {
         startBtn.removeEventListener("click", startStopwatch);
@@ -32,6 +34,8 @@ function createStopwatch(containerElement) {
             time += 10;
             setTimeAtPage(containerElement, time, true);
         }, 10)
+        
+        changeTabs(intervalID, containerElement, "stopwatch");
     }
 
     function stopStopwatch() {
