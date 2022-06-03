@@ -4,6 +4,7 @@ import getZero from "../tech functions/getZero";
 function createSlider(containerElement, maxValue, defaultActiveNumber = 0) {
     containerElement.innerHTML = "<div class='clock__wrapper-slider'></div>";
     const wrapperSlides = containerElement.querySelector(".clock__wrapper-slider");
+    const startOffset = wrapperSlides.scrollTop;
     let activeNumber = defaultActiveNumber;
     let activeIndexNumber = defaultActiveNumber;
 
@@ -22,33 +23,70 @@ function createSlider(containerElement, maxValue, defaultActiveNumber = 0) {
         );
     }
 
-    // for (let i = 1; i <= 3; i++) {
-    //     for (let j = 0; j < maxValue; j++) {
-    //         wrapperSlides.insertAdjacentHTML("beforeend",
-    //             `   <span
-    //                     data-index=${j*i}
-    //                     class=${(i === 2 && j === 0) ? "active" : ""}
-    //                 >${getZero(j)}</span>
-    //             `
-    //         );
-    //     }
-    // }
     const activeElement = wrapperSlides.querySelector('span.active');
     activeElement.scrollIntoView(true);
-    activeElement.scrollBy(0, -getCountPixels(activeElement, "height") );
+    wrapperSlides.style.scrollBehavior = "smooth"; // for some reason, I get bug with this style in css file
 
-    // wrapperSlides.scrollTop = getCountPixels(containerElement, "height") * i * 0.5;
+    wrapperSlides.addEventListener("click", changeSlide);
 
-    wrapperSlides.addEventListener('click', changeSlide);
+    
+    wrapperSlides.addEventListener("wheel", setActiveOnWheel);
+    // wrapperSlides.addEventListener("scroll", console.log)
+
+    let isWheelNow = false;
+    let countWheel = 0;
+
+    function setActiveOnWheel(event) { // set alignment an element and set style of activity
+        event.preventDefault();
+
+        const heightChild = getCountPixels(wrapperSlides.querySelector("span"), "height");
+        const remainedToTarget = (wrapperSlides.scrollTop - startOffset) % heightChild /* * (event.deltaY / 100) */;
+
+        // if(remainedToTarget >= 60) wrapperSlides.querySelector("span.active").scrollBy(0, remainedToTarget);
+        // else wrapperSlides.querySelector("span.active").scrollBy(0, -remainedToTarget);
+        
+        // if(remainedToTarget >= 60) wrapperSlides.querySelector("span.active + span").classList.add("active")
+        // else wrapperSlides.querySelector("span.active + span").scrollIntoView(true);
+
+        if(event.deltaY > 0)
+            this.scrollBy({
+                top: getCountPixels(this.querySelector("span"), "height"),
+                behavior: 'smooth'
+            })
+        else 
+            this.scrollBy({
+                top: -1 * getCountPixels(this.querySelector("span"), "height"),
+                behavior: 'smooth'
+            });
+
+        // console.log(remainedToTarget)
+        // console.log(wrapperSlides.scrollTop)
+    }
+    function setVerticalWheel(e, element, sprayingTime = 15, maxCoefficient = sprayingTime/2) {
+        e.preventDefault();
+    
+        let sprayingCoefficient = 40;
+        let delta = Math.max(-1, Math.min(1, e.deltaY || e.detail || -e.wheelDelta));
+    
+        const looping = () => {
+            this.scrollBy({
+                top: delta * sprayingCoefficient,
+            });
+            console.log(delta * sprayingCoefficient)
+            if(--sprayingTime <= 0) return;
+            
+            if(maxCoefficient == 0 && sprayingCoefficient > maxCoefficient) {
+                --sprayingCoefficient;
+            }
+            else if(sprayingCoefficient++ > maxCoefficient) maxCoefficient = 0;
+
+            looping();
+        }
+    
+        looping();
+    }
+
     function changeSlide(event) {
-        /*
-        Для бесконечной прокрутки надо:
-
-        1)N - количество пролистываемых позиций(возможно пролистнуть сразу на 2 слайда и более);
-        2)удалить N число слайдов в начале или в конце списка и поместить их содержимое(развернутое), соответственно в конец или начало
-        */
-
-        // реализация бесконечной прокрутки
         if(event && event.target && event.target.tagName == "SPAN") {
             const target = event.target;
 
@@ -77,7 +115,6 @@ function createSlider(containerElement, maxValue, defaultActiveNumber = 0) {
                     this.append(element);
                 }
             }
-            
 
             activeNumber = target.textContent;
             wrapperSlides.querySelectorAll("span").forEach(element => {
@@ -90,7 +127,7 @@ function createSlider(containerElement, maxValue, defaultActiveNumber = 0) {
     }
 }
 
-//
+// supporting unnecessary functions
 function createHoursSlider(containerHoursElement) {
     createSlider(containerHoursElement, 24);
 }

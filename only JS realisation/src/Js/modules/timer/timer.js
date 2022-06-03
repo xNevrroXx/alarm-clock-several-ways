@@ -4,6 +4,8 @@ import {clearClockElement} from "../tech functions/clearClockElement";
 import { createSpans } from "../tech functions/createElements";
 import setTimeAtPage from "../time/setTimeAtPage";
 import changeTabs from "../tech functions/changeTabs";
+import IosSelector from "../slider for time/another-slider";
+import {getHours, getMinutes, getSeconds} from "../slider for time/another-slider";
 
 function createTimer(containerElement) {
     const hoursWrap = containerElement.querySelector(".hours");
@@ -12,11 +14,8 @@ function createTimer(containerElement) {
     let intervalID = null;
 
     const startBtn = createButton("start timer");
-<<<<<<< Updated upstream
-    containerElement.appendChild(startBtn);
-=======
     const stopBtn = createButton("stop timer");
-    containerElement.append(startBtn);
+    containerElement.after(startBtn);
 
     // own slider
     // createHoursSlider(hoursWrap);
@@ -54,6 +53,7 @@ function createTimer(containerElement) {
         source: minutesSource,
         count: 20,
         onChange: (selected) => {
+            console.log(selected)
             currentMinute = selected.value;
             console.log(hoursSelector.value, minutesSelector.value, secondsSelector.value);
         }
@@ -70,31 +70,23 @@ function createTimer(containerElement) {
         }
     });
 
->>>>>>> Stashed changes
-
-    createHoursSlider(hoursWrap);
-    createMinutesSlider(minutesWrap);
-    createSecondsSlider(secondsWrap);
-
     startBtn.addEventListener("click", startTimer);
 
     changeTabs(intervalID, containerElement, "timer");
     
     function startTimer() {
-        let remainedTime = getStartTime();
+        let remainedTime = getStartTimeFromCloneSlider();
 
-<<<<<<< Updated upstream
         startBtn.removeEventListener("click", startTimer)
         clearClockElement(containerElement);
-=======
+        
         startBtn.removeEventListener("click", startTimer);
         startBtn.remove();
         clearClockElement(containerElement); 
->>>>>>> Stashed changes
+        
         createSpans(containerElement);
 
-        const stopBtn = createButton("stop timer");
-        containerElement.appendChild(stopBtn);
+        containerElement.after(stopBtn);
         
         setTimeAtPage(containerElement, remainedTime);
         intervalID = setInterval(() => {
@@ -113,12 +105,11 @@ function createTimer(containerElement) {
 
         // functions
         function techStopTimer() {
-<<<<<<< Updated upstream
             stopBtn.removeEventListener("click", techStopTimer);
-=======
+            
             stopBtn.removeEventListener("click", techStopTimer); 
             stopBtn.remove();
->>>>>>> Stashed changes
+            
             clearClockElement(containerElement);
 
             clearInterval(intervalID);
@@ -129,6 +120,9 @@ function createTimer(containerElement) {
             techStopTimer();
         }
 
+        function getStartTimeFromCloneSlider() {
+            return ((currentHour * 1000 * 60 * 60) + (currentMinute * 1000 * 60) + (currentSecond * 1000));
+        }
         function getStartTime() {
             let hours = hoursWrap.querySelector(".clock__wrapper-slider > span.active"),
                 minutes = minutesWrap.querySelector(".clock__wrapper-slider > span.active"),
