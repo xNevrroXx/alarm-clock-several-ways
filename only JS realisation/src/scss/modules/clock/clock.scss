@@ -12,7 +12,7 @@
     }
     .clock__wrapper-slider {
         overflow: hidden auto;
-        scroll-snap-type: y mandatory;
+        // scroll-snap-type: y mandatory;
         display: flex;
         flex-direction: column;
         height: 300%;
@@ -22,6 +22,5 @@
     }
     span {
         transform: translateY(120px);
-        scroll-snap-align: center;
     }
 }

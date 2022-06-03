@@ -4,6 +4,8 @@ import {clearClockElement} from "../tech functions/clearClockElement";
 import { createSpans } from "../tech functions/createElements";
 import setTimeAtPage from "../time/setTimeAtPage";
 import changeTabs from "../tech functions/changeTabs";
+import IosSelector from "../slider for time/another-slider";
+import {getHours, getMinutes, getSeconds} from "../slider for time/another-slider";
 
 function createTimer(containerElement) {
     const hoursWrap = containerElement.querySelector(".hours");
@@ -12,25 +14,76 @@ function createTimer(containerElement) {
     let intervalID = null;
 
     const startBtn = createButton("start timer");
-    containerElement.appendChild(startBtn);
+    const stopBtn = createButton("stop timer");
+    containerElement.after(startBtn);
 
-    createHoursSlider(hoursWrap);
-    createMinutesSlider(minutesWrap);
-    createSecondsSlider(secondsWrap);
+    // own slider
+    // createHoursSlider(hoursWrap);
+    // createMinutesSlider(minutesWrap);
+    // createSecondsSlider(secondsWrap);
+
+
+    // clone another slider
+    let currentHour = 0;
+    let currentMinute = 0;
+    let currentSecond = 0;
+    
+    let hoursSelector;
+    let minutesSelector;
+    let secondsSelector;
+    
+    let hourseSource = getHours();
+    let minutesSource = getMinutes();
+    let secondsSource = getSeconds();
+    
+    hoursSelector = new IosSelector({
+        el: '.hours',
+        type: 'infinite',
+        source: hourseSource,
+        count: 20,
+        onChange: (selected) => {
+            currentHour = selected.value;
+            console.log(hoursSelector.value, minutesSelector.value, secondsSelector.value);
+        }
+    });
+    
+    minutesSelector = new IosSelector({
+        el: '.minutes',
+        type: 'infinite',
+        source: minutesSource,
+        count: 20,
+        onChange: (selected) => {
+            console.log(selected)
+            currentMinute = selected.value;
+            console.log(hoursSelector.value, minutesSelector.value, secondsSelector.value);
+        }
+    });
+    
+    secondsSelector = new IosSelector({
+        el: '.seconds',
+        type: 'infinite',
+        source: secondsSource,
+        count: 20,
+        onChange: (selected) => {
+            currentSecond = selected.value;
+            console.log(hoursSelector.value, minutesSelector.value, secondsSelector.value);
+        }
+    });
+
+
 
     startBtn.addEventListener("click", startTimer);
 
     changeTabs(intervalID, containerElement, "timer");
     
     function startTimer() {
-        let remainedTime = getStartTime();
+        let remainedTime = getStartTimeFromCloneSlider();
 
         startBtn.removeEventListener("click", startTimer)
-        clearClockElement(containerElement);
+        clearClockElement(containerElement); startBtn.remove();
         createSpans(containerElement);
 
-        const stopBtn = createButton("stop timer");
-        containerElement.appendChild(stopBtn);
+        containerElement.after(stopBtn);
         
         setTimeAtPage(containerElement, remainedTime);
         intervalID = setInterval(() => {
@@ -49,7 +102,7 @@ function createTimer(containerElement) {
 
         // functions
         function techStopTimer() {
-            stopBtn.removeEventListener("click", techStopTimer);
+            stopBtn.removeEventListener("click", techStopTimer); stopBtn.remove();
             clearClockElement(containerElement);
 
             clearInterval(intervalID);
@@ -60,6 +113,9 @@ function createTimer(containerElement) {
             techStopTimer();
         }
 
+        function getStartTimeFromCloneSlider() {
+            return ((currentHour * 1000 * 60 * 60) + (currentMinute * 1000 * 60) + (currentSecond * 1000));
+        }
         function getStartTime() {
             let hours = hoursWrap.querySelector(".clock__wrapper-slider > span.active"),
                 minutes = minutesWrap.querySelector(".clock__wrapper-slider > span.active"),
