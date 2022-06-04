@@ -12,65 +12,7 @@ function createTimer(containerElement) {
     let intervalID = null;
 
     const startBtn = createButton("start timer");
-<<<<<<< Updated upstream
     containerElement.appendChild(startBtn);
-=======
-    const stopBtn = createButton("stop timer");
-    containerElement.append(startBtn);
-
-    // own slider
-    // createHoursSlider(hoursWrap);
-    // createMinutesSlider(minutesWrap);
-    // createSecondsSlider(secondsWrap);
-
-
-    // clone another slider
-    let currentHour = 0;
-    let currentMinute = 0;
-    let currentSecond = 0;
-    
-    let hoursSelector;
-    let minutesSelector;
-    let secondsSelector;
-    
-    let hourseSource = getHours();
-    let minutesSource = getMinutes();
-    let secondsSource = getSeconds();
-    
-    hoursSelector = new IosSelector({
-        el: '.hours',
-        type: 'infinite',
-        source: hourseSource,
-        count: 20,
-        onChange: (selected) => {
-            currentHour = selected.value;
-            console.log(hoursSelector.value, minutesSelector.value, secondsSelector.value);
-        }
-    });
-    
-    minutesSelector = new IosSelector({
-        el: '.minutes',
-        type: 'infinite',
-        source: minutesSource,
-        count: 20,
-        onChange: (selected) => {
-            currentMinute = selected.value;
-            console.log(hoursSelector.value, minutesSelector.value, secondsSelector.value);
-        }
-    });
-    
-    secondsSelector = new IosSelector({
-        el: '.seconds',
-        type: 'infinite',
-        source: secondsSource,
-        count: 20,
-        onChange: (selected) => {
-            currentSecond = selected.value;
-            console.log(hoursSelector.value, minutesSelector.value, secondsSelector.value);
-        }
-    });
-
->>>>>>> Stashed changes
 
     createHoursSlider(hoursWrap);
     createMinutesSlider(minutesWrap);
@@ -83,14 +25,9 @@ function createTimer(containerElement) {
     function startTimer() {
         let remainedTime = getStartTime();
 
-<<<<<<< Updated upstream
-        startBtn.removeEventListener("click", startTimer)
-        clearClockElement(containerElement);
-=======
         startBtn.removeEventListener("click", startTimer);
         startBtn.remove();
         clearClockElement(containerElement); 
->>>>>>> Stashed changes
         createSpans(containerElement);
 
         const stopBtn = createButton("stop timer");
@@ -113,12 +50,8 @@ function createTimer(containerElement) {
 
         // functions
         function techStopTimer() {
-<<<<<<< Updated upstream
-            stopBtn.removeEventListener("click", techStopTimer);
-=======
             stopBtn.removeEventListener("click", techStopTimer); 
             stopBtn.remove();
->>>>>>> Stashed changes
             clearClockElement(containerElement);
 
             clearInterval(intervalID);
