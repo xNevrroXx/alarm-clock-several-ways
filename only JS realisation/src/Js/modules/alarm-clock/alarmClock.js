@@ -19,6 +19,8 @@ function createAlarmClock(containerElement) {
     containerElement.appendChild(setAlarm);
 
     changeTabs(intervalID, containerElement, "alarm clock");
+
+    
 }
 
 export default createAlarmClock;

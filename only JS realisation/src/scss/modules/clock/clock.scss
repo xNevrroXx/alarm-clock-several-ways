@@ -5,6 +5,7 @@
 	width: 500px;
 	display: flex;
 	justify-content: center;
+    align-items: center;
 	margin: 0 auto;
     & > div {
         width: 90px;
@@ -23,5 +24,10 @@
     span {
         transform: translateY(120px);
         scroll-snap-align: center;
+    }
+    .start-button {
+        width: 150px;
+        height: 75px;
+        font-size: 15px;
     }
 }

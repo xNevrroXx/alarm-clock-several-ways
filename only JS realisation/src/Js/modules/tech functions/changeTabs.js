@@ -9,7 +9,7 @@ import createAlarmClock from "../alarm-clock/alarmClock";
 function changeTabs(intervalID, clockElement, currentTab) {
     const activeTab = currentTab;
     const tabsElement = document.querySelector("header");
-
+    
     tabsElement.addEventListener("click", handler);
 
     function handler(event) {
