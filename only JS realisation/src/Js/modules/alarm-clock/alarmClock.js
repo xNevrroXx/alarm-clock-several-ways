@@ -38,18 +38,28 @@ function createAlarmClock(containerElement) {
             
             remainedTime = timeToMidnightMs;
             remainedTime += alertTimeMs;
+            console.log(remainedTime)
         } else {
             remainedTime = alertTimeMs - getTimeFromMidnightMs(new Date());
             console.log(remainedTime);
         }
         
-        intervalID = setInterval(() => {
-            remainedTime = 1000 * 60 * 60 * 24;
-            alert("hello");
-        }, remainedTime)
+        alert(`The alarm will ring in: ${Math.floor(remainedTime / (1000 * 60 * 60))}h ${Math.floor(remainedTime / (1000 * 60) % 60)}m`); // create some nive notification
+
+        intervalID = alarmInterval(remainedTime);
 
         createAlarmClock(containerElement);
     }
+    
+    function alarmInterval(remainedTime) {
+        return (
+            setInterval(() => {
+                alert("hello"); // here will be some sound and graphic notification
+                clearInterval(intervalID);
+            }, remainedTime)
+        )
+    }
+
     function getAlertTime() {
         let hours = hoursWrap.querySelector(".clock__wrapper-slider > span.active"),
             minutes = minutesWrap.querySelector(".clock__wrapper-slider > span.active"),

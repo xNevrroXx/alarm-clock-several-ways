@@ -34,16 +34,7 @@ function createTimer(containerElement) {
         containerElement.appendChild(stopBtn);
         
         setTimeAtPage(containerElement, remainedTime);
-        intervalID = setInterval(() => {
-            if(remainedTime == 0) {
-                autoStopTimer();
-                clearInterval(intervalID);
-                return;
-            }
-
-            remainedTime = remainedTime - 1000;
-            setTimeAtPage(containerElement, remainedTime);
-        }, 1000)
+        intervalID = timerInterval(remainedTime)
 
         stopBtn.addEventListener("click", techStopTimer);
 
@@ -69,6 +60,19 @@ function createTimer(containerElement) {
 
             return ((+hours.textContent * 1000 * 60 * 60) + (+minutes.textContent * 1000 * 60) + (+seconds.textContent * 1000));
         }
+    }
+
+    function timerInterval(remainedTime) {
+        setInterval(() => {
+            if(remainedTime == 0) {
+                autoStopTimer();
+                clearInterval(intervalID);
+                return;
+            }
+
+            remainedTime = remainedTime - 1000;
+            setTimeAtPage(containerElement, remainedTime);
+        }, 1000)
     }
 }
 
