@@ -1,3 +1,6 @@
+import clockList from "../clock-list/clock-list";
+import { getTimeFromMidnightMs } from "../tech functions/getTimeFromMidnight";
+
 class AlarmsClass {
     constructor(containerActiveTasks, mainContainerSelector) {
         this.containerActiveTasks = containerActiveTasks;
@@ -9,21 +12,32 @@ class AlarmsClass {
             
         },
         _alarms: {
-            /*  example
-                intervalId */
-                2: {
-                    time: {
-                        hours: 10,
-                        minutes: 15
-                    },
-                    /* maybe add some settings of sound or something else */
+            2: {
+                time: {
+                    hours: 10,
+                    minutes: 15
                 },
+                isDrowMainContainer: false,
+                isEnable: true
+                /* maybe add some settings of sound or something else */
+            },
         },
         _stopwatches: {
             // intervalId: *сколько прошло времени
+            20: {
+                time: {
+                    minutes: 55,
+                    seconds: 20,
+                    milliseconds: 20
+                },
+                isDrowMainContainer: false,
+                isPaused: false
+            },
         },
         _timers : {
             // intervalId: *оставшееся время
+
+            /* maybe add some settings of sound or something else */
         },
 
         get clocks() {
@@ -33,41 +47,54 @@ class AlarmsClass {
             return this._alarms;
         },
         get stopwatches() {
-            return this._stowwatches;
+            return this._stopwatches;
         },
         get timers() {
             return this._timers;
         },
-         
     }
 
     _setIntervalClock(UTCDeviation) {
         this._initContainerTime(this.mainContainerSelector);
 
         setTimeout(() => {
-            this.drow( this.mainContainerSelector, this.getObjTime(new Date().getTime() + (1000 * 60 * 60 * UTCDeviation), false) );
-            
+            this.drow( this.mainContainerSelector, this.getObjTime(new Date().getTime() + (1000 * 60 * 60 * UTCDeviation), true, false) );
+            let firstRepeat = true;
+
             const intervalId = setInterval(() => {
-                this.objActiveTasks._clocks[intervalId] = {
-                    time: this.getObjTime(new Date().getTime() + (1000 * 60 * 60 * UTCDeviation), false) 
+                if(firstRepeat) {
+                    this.objActiveTasks._clocks[intervalId] = {
+                        isDrowMainContainer: true,
+                        time: this.getObjTime(new Date().getTime() + (1000 * 60 * 60 * UTCDeviation), true, false) 
+                    }
                 }
+                else {
+                    this.objActiveTasks._clocks[intervalId] = {
+                        ...this.objActiveTasks._clocks[intervalId],
+                        time: this.getObjTime(new Date().getTime() + (1000 * 60 * 60 * UTCDeviation), true, false) 
+                    }
+                }
+                firstRepeat = false;
     
-                this.drow(this.mainContainerSelector, this.objActiveTasks._clocks[intervalId].time);
+                if(this.objActiveTasks.clocks[intervalId].isDrowMainContainer) {
+                    this.drow(this.mainContainerSelector, this.objActiveTasks._clocks[intervalId].time);
+                }
+                clockList(this.containerActiveTasks, this.objActiveTasks);
             }, 1000)
         }, Math.floor( new Date().getTime() % 1000 ));
     }
 
-    _setIntervalAlarm = (alertTimeMs) => {
+    _setIntervalAlarm = (alertTimeMsFromMidnight) => {
         let remainedTime = 0;
 
-        if(getTimeFromMidnightMs(new Date()) > alertTimeMs) {
-            const timeToMidnightMs = (1000 * 60 * 60 * 24) - getTimeFromMidnightMs(new Date());
+        if(getTimeFromMidnightMs(new Date().getTime()) > alertTimeMsFromMidnight) {
+            const timeToMidnightMs = (1000 * 60 * 60 * 24) - getTimeFromMidnightMs(new Date().getTime());
             
             remainedTime = timeToMidnightMs;
-            remainedTime += alertTimeMs;
+            remainedTime += alertTimeMsFromMidnight;
             console.log(remainedTime)
         } else {
-            remainedTime = alertTimeMs - getTimeFromMidnightMs(new Date());
+            remainedTime = alertTimeMsFromMidnight - getTimeFromMidnightMs(new Date().getTime());
             console.log(remainedTime);
         }
         
@@ -76,30 +103,45 @@ class AlarmsClass {
         const intervalId = setTimeout(() => {
             alert("hello"); // here will be some sound and graphic notification
             clearInterval(intervalId);
+            clockList(this.containerActiveTasks, this.objActiveTasks);
         }, remainedTime);
 
-        this.objActiveTasks._alarms.push({
-            intervalId,
-            time: {
-                hours: /* ... */ 1,
-                minutes: /* ... */ 2
-            }
-        })
-
-        createAlarmClock(containerElement);
+        this.objActiveTasks._alarms[intervalId] = {
+            time: this.getObjTime(alertTimeMsFromMidnight, false)
+        }
+        console.log(this.getObjTime(alertTimeMsFromMidnight))
     }
 
     _setIntervalTimer = (remainedTimeMs) => {
+        let firstRepeat = true;
+        
         const intervalId = setInterval(() => {
+            if(firstRepeat) {
+                this.objActiveTasks._clocks[intervalId] = {
+                    isDrowMainContainer: true,
+                    time: this.getObjTime(new Date().getTime() + (1000 * 60 * 60 * UTCDeviation), true, false) 
+                }
+            }
+            else {
+                this.objActiveTasks._clocks[intervalId] = {
+                    ...this.objActiveTasks.timers[intervalId],
+                    time: this.getObjTime(new Date().getTime() + (1000 * 60 * 60 * UTCDeviation), true, false) 
+                }
+            }
+            firstRepeat = false;
+
             if(remainedTimeMs == 0) {
                 autoStopTimer();
-                clearInterval(intervalID);
+                clearInterval(intervalId);
                 return;
             }
 
             remainedTimeMs = remainedTimeMs - 1000;
 
-            setTimeAtPage(containerElement, remainedTimeMs);
+            if(this.objActiveTasks.timers[intervalId].isDrowMainContainer) {
+                this.drow(this.mainContainerSelector, this.objActiveTasks._timers[intervalId].time);
+            }
+            clockList(this.containerActiveTasks, this.objActiveTasks);
         }, 1000)
         this.objActiveTasks._timers.push({
             intervalId,
@@ -109,7 +151,7 @@ class AlarmsClass {
             }
         })
         
-
+        
         function techStopTimer() {
             // stopBtn.removeEventListener("click", techStopTimer); 
             // stopBtn.remove();
@@ -124,26 +166,34 @@ class AlarmsClass {
         }
     }
 
-    _setIntervalStopwatch = () => {
+    _setIntervalStopwatch = (startTime = 0) => {
         // startBtn.removeEventListener("click", startStopwatch);
         // startBtn.remove();
         // containerElement.appendChild(stopBtn);
         // stopBtn.addEventListener("click", stopStopwatch);
+        let firstRepeat = true;
+        let timeMs = 0;
 
         const intervalId = setInterval(() => {
-            time += 10;
-            // setTimeAtPage(containerElement, time, true);
-
-            
-            this.objActiveTasks._stopwatches[intervalId] = {
-                time: {
-                    hours: Math.floor(time / (1000 * 60 * 60)),
-                    minutes: Math.floor(time / (1000 * 60) % 60),
-                    seconds: Math.floor(time / 1000 % 60)
+            timeMs += 10;
+            if(firstRepeat) {
+                this.objActiveTasks._stopwatches[intervalId] = {
+                    isDrowMainContainer: true,
+                    time: this.getObjTime(timeMs)
                 }
             }
+            else {
+                this.objActiveTasks._stopwatches[intervalId] = {
+                    ...this.objActiveTasks._stopwatches[intervalId],
+                    time: this.getObjTime(timeMs)
+                }
+            }
+            firstRepeat = false;
 
-            this.drow(mainContainerSelector, this.objActiveTasks._stopwatches[intervalId].time);
+            if(this.objActiveTasks.stopwatches[intervalId].isDrowMainContainer) {
+                this.drow(mainContainerSelector, this.objActiveTasks._stopwatches[intervalId].time);
+            }
+            clockList(this.containerActiveTasks, this.objActiveTasks);
         }, 10)
         
         // changeTabs(intervalID, containerElement, "stopwatch");
@@ -166,6 +216,28 @@ class AlarmsClass {
 
         delete this.objActiveTasks[typeTask][intervalId];
         alert(`${typeTask} id ${intervalId} deleted!`);
+    }
+
+    offAllIsDrowMainContainer = () => {
+        for (const typeTask in this.objActiveTasks) {
+            if (Object.hasOwnProperty.call(this.objActiveTasks, typeTask)) {
+                const listIntervals = this.objActiveTasks[typeTask];
+                
+                for (const intervalId in listIntervals) {
+                    if (Object.hasOwnProperty.call(listIntervals, intervalId)) {
+                        const task = listIntervals[intervalId];
+                        
+                        task.isDrowMainContainer = false;
+                    }
+                }
+            }
+        }
+    }
+    toggleIsDrowMainContainer = (typeTask, intervalId) => {
+        this.objActiveTasks[typeTask][intervalId] = {
+            ...this.objActiveTasks[typeTask][intervalId],
+            isDrowMainContainer: !this.objActiveTasks[typeTask][intervalId].isDrowMainContainer
+        }
     }
 
     drow = (containerSelector, time) => {
@@ -225,15 +297,16 @@ class AlarmsClass {
         wrapperTime.append(seconds);
     }
 
-    getObjTime = (timeMs, isNeedMilliseconds) => {
+    getObjTime = (timeMs, isNeedSeconds = true, isNeedMilliseconds = false) => {
         const result = {
             hours: this.getZero(Math.floor(timeMs / (1000 * 60 * 60) % 24)),
-            minutes: this.getZero(Math.floor(timeMs / (1000 * 60) % 60)),
-            seconds: this.getZero(Math.floor(timeMs / 1000 % 60))
+            minutes: this.getZero(Math.floor(timeMs / (1000 * 60) % 60))
         }
-
+        if(isNeedSeconds) {
+            result.seconds = this.getZero(Math.floor(timeMs / 1000 % 60));
+        }
         if(isNeedMilliseconds) {
-            result.milliseconds = this.getZero(Math.floor((timeMs % 1000) / 10))
+            result.milliseconds = this.getZero(Math.floor((timeMs % 1000) / 10));
         }
 
         return result;

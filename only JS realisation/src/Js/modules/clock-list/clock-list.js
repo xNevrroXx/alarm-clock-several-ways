@@ -6,10 +6,10 @@ function clockList(selectorListWrapper, objActiveTasks) {
           timerListEl = wrapperListEl.querySelector(`.timers > .active-tasks__list-tasks`);
 
     
-    // clockListEl.innerHTML = "";
-    // alarmListEl.innerHTML = "";
-    // stopwatcheListEl.innerHTML = "";
-    // timerListEl.innerHTML = "";
+    clockListEl.innerHTML = "";
+    alarmListEl.innerHTML = "";
+    stopwatchListEl.innerHTML = "";
+    timerListEl.innerHTML = "";
 
     for (const typeTask in objActiveTasks) {
         if (Object.hasOwnProperty.call(objActiveTasks, typeTask)) {
@@ -46,39 +46,49 @@ function clockList(selectorListWrapper, objActiveTasks) {
                     continue;
                 }
 
+
+                const listElems = [];
                 for (const key in listIntervals) {
                     if (Object.hasOwnProperty.call(listIntervals, key)) {
-                        const element = listIntervals[key];
-                        
-                        switch (typeTask) {
-                            case "clocks": {
-                                
-                                
-                                break;
-                            }
+                        const intervalObjFields = listIntervals[key];
 
-                            case "alarms": {
-                                
-                                
-                                break;
-                            }
-
-                            case "timers": {
-
-
-                                break;
-                            }
-
-                            case "stopwatches": {
-
-
-                                break;
-                            }
-                        
-                            default:
-                                break;
-                        }
+                        const elem = document.createElement("li");
+                        elem.innerHTML = `
+                                <div class="active-tasks__time">${intervalObjFields.time.hours ? intervalObjFields.time.hours : ""}:${intervalObjFields.time.minutes}${intervalObjFields.time.seconds ? `:${intervalObjFields.time.seconds}`: ""}</div>
+                                <button class="button active-tasks__cancel">cancel</button>
+                        `;
+                        listElems.push(elem);
                     }
+                }
+
+                switch (typeTask) {
+                    case "clocks": {
+                        listElems.forEach(elem => clockListEl.append(elem));
+                        break;
+                    }
+
+                    case "alarms": {
+                        listElems.forEach(elem => alarmListEl.append(elem));
+                        
+                        break;
+                    }
+
+                    case "timers": {
+                        listElems.forEach(elem => timerListEl.append(elem));
+
+                        break;
+                    }
+
+                    case "stopwatches": {
+                        listElems.forEach(elem => {
+                            stopwatchListEl.append(elem)
+                        });
+
+                        break;
+                    }
+                
+                    default:
+                        break;
                 }
             }
         }

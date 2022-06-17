@@ -1,15 +1,16 @@
-
 import createClock from "../clock/clock";
 import setTimeAtPage from "../time/setTimeAtPage";
 import createTimer from "../timer/timer";
 import createStopwatch from "../stopwatch/stopwatch";
+import initSlider from "../alarm-clock/initSlider";
 import {clearClockElement} from "./clearClockElement";
-import createAlarmClock from "../alarm-clock/alarmClock";
+import AlarmsClass from "../alarmsClass/AlarmsClass";
 
-function changeTabs(intervalID, clockElement, currentTab) {
-    const activeTab = currentTab;
+function changeTabs(/* intervalID */ clockElement, currentTab, alarm) {
+    let activeTab = currentTab;
     const tabsElement = document.querySelector("header");
     
+    initNewTab(activeTab);
     tabsElement.addEventListener("click", handler);
 
     function handler(event) {
@@ -18,40 +19,68 @@ function changeTabs(intervalID, clockElement, currentTab) {
             && event.target.tagName == "DIV"
             && event.target.textContent.toLowerCase() !== activeTab
         ) {
-            tabsElement.removeEventListener("click", handler);
+            // tabsElement.removeEventListener("click", handler);
 
-            if(intervalID) {
+            /* if(intervalID) {
                 clearInterval(intervalID);
                 intervalID = null;
+            } */    
+            console.log("this tab: ", event.target.textContent.toLowerCase())
+            initNewTab(event.target.textContent.toLowerCase());
+            // tabsElement.addEventListener("click", handler);
+        }
+    }
+
+    function initNewTab(nameNewTab) {
+        activeTab = nameNewTab;
+
+        console.log(activeTab)
+        switch(activeTab) {
+            case "time": {
+                alarm.offAllIsDrowMainContainer();
+                /* 
+                    добавить выбор региона или хотя бы часового пояса относительно гринвича
+                */
+                alarm._setIntervalClock(3);
+                break;
             }
 
-            switch(event.target.textContent.toLowerCase()) {
-                case "time": {
-                    clearClockElement(clockElement);
-                    createClock(clockElement);
-                    break;
-                }
+            case "alarm clock": {
+                alarm.offAllIsDrowMainContainer();
+                // clearClockElement(clockElement);
+                // createAlarmClock(clockElement);
 
-                case "alarm clock": {
-                    clearClockElement(clockElement);
-                    createAlarmClock(clockElement);
+                /* 
+                    добавить слайдер
+                */
+                initSlider("#clock", (timeMs) => alarm._setIntervalAlarm(timeMs), "alarm")
+                break;
+            }
 
-                    break;
-                }
+            case "stopwatch": {
+                alarm.offAllIsDrowMainContainer();
+                // clearClockElement(clockElement);
+                // createStopwatch(clockElement);
 
-                case "stopwatch": {
-                    clearClockElement(clockElement);
-                    createStopwatch(clockElement);
+                /* 
+                    добавить кнопку пуска и паузы
+                */
+                alarm._setIntervalStopwatch();
 
-                    break;
-                }
+                break;
+            }
 
-                case "timer": {
-                    clearClockElement(clockElement);
-                    createTimer(clockElement);
+            case "timer": {
+                alarm.offAllIsDrowMainContainer();
+                // clearClockElement(clockElement);
+                // createTimer(clockElement);
 
-                    break;
-                }
+                /* 
+                    добавить слайдер
+                */
+                initSlider("#clock", (timeMs) => alarm._setIntervalTimer(timeMs), "timer")
+                
+                break;
             }
         }
     }
